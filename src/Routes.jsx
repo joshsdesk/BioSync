@@ -16,10 +16,16 @@ import AuthPage from './pages/auth';
 import Settings from './pages/settings';
 import Preferences from './pages/preferences';
 import Biometrics from './pages/biometrics';
+import WorkoutSchedule from './pages/workout-schedule';
 import NotFound from './pages/NotFound';
 
 import Header from './components/ui/Header';
 
+/**
+ * Routes Component
+ * Defines the main application routing structure and layout wrappers.
+ * Includes global providers, error barriers, and navigation elements.
+ */
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -41,6 +47,7 @@ const Routes = () => {
             <Route path="/settings" element={<Settings />} />
             <Route path="/preferences" element={<Preferences />} />
             <Route path="/biometrics" element={<Biometrics />} />
+            <Route path="/workout-schedule" element={<WorkoutSchedule />} />
             <Route path="*" element={<NotFound />} />
           </RouterRoutes>
           <FloatingActionButton />

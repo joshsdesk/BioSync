@@ -3,6 +3,11 @@ import { Plus, MessageCircle, Camera, Upload, BarChart3, Clock } from 'lucide-re
 import Icon from './AppIcon';
 
 
+/**
+ * Floating Action Button (FAB) Component
+ * Provides quick access to primary actions via an expandable menu.
+ * Positioned fixed at the bottom-right of the screen.
+ */
 const FloatingActionButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -10,6 +15,7 @@ const FloatingActionButton = () => {
     setIsOpen(!isOpen);
   };
 
+  /* --- Menu Configuration --- */
   const menuItems = [
     {
       icon: Camera,
@@ -51,17 +57,15 @@ const FloatingActionButton = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {/* Menu Items */}
-      <div className={`absolute bottom-16 right-0 space-y-3 transition-all duration-300 ${
-        isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
-      }`}>
+      <div className={`absolute bottom-16 right-0 space-y-3 transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}>
         {menuItems?.map((item, index) => {
           const Icon = item?.icon;
           return (
             <div
               key={index}
-              className={`flex items-center space-x-3 transition-all duration-300 ${
-                isOpen ? 'translate-x-0' : 'translate-x-12'
-              }`}
+              className={`flex items-center space-x-3 transition-all duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-12'
+                }`}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
               <span className="bg-gray-800 text-white px-3 py-1 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
@@ -81,9 +85,8 @@ const FloatingActionButton = () => {
       {/* Main FAB Button */}
       <button
         onClick={toggleMenu}
-        className={`w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center ${
-          isOpen ? 'rotate-45' : 'rotate-0'
-        }`}
+        className={`w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center ${isOpen ? 'rotate-45' : 'rotate-0'
+          }`}
         title={isOpen ? 'Close menu' : 'Quick actions'}
       >
         <Plus size={24} className="transition-transform duration-300" />

@@ -1,0 +1,598 @@
+/* PhoneLoader.css */
+/* Adapted from user provided CodePen, isolated for the 'last' (lifting) variant */
+
+.phone-loader-wrapper {
+    position: relative;
+    width: 200px;
+    /* Adjust as needed */
+    height: 300px;
+    /* Adjust as needed */
+    margin: 0 auto;
+}
+
+.mobile-content {
+    width: 118px;
+    height: 182px;
+    border: 5px solid #0600ff;
+    border-radius: 10px;
+    position: relative;
+    margin: 0 auto;
+    animation: vibrate-1 2s ease-out infinite alternate both;
+    background: #fff;
+    /* Ensure it has a background */
+}
+
+/* Animations from the 'last' variant */
+.mobile-loader .mobile-content {
+    width: 135px;
+    height: 235px;
+    animation: vibrate-1 4s ease-out infinite alternate both;
+}
+
+.mobile-loader .mobile-screen {
+    margin: 7px 0;
+    height: 212px;
+    border-top: 5px solid #0600ff;
+    border-bottom: 5px solid #0600ff;
+}
+
+.mobile-loader .mobile-face {
+    position: absolute;
+    top: 25%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.mobile-loader .mobile-speaker {
+    display: none;
+}
+
+/* Mouth 'last' variant */
+.mobile-loader .mobile-mouth .line-1 {
+    display: none;
+}
+
+.mobile-loader .mobile-mouth .line-2 {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 5px solid #0600ff;
+    background: #fff;
+    margin: 8px auto 0;
+    animation: third-line-3 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes third-line-3 {
+    0% {
+        width: 15px;
+        height: 15px;
+    }
+
+    100% {
+        width: 20px;
+        height: 10px;
+    }
+}
+
+.mobile-loader .mobile-mouth .line-3 {
+    width: 30px;
+    height: 15px;
+    border-radius: 0 0 30px 30px;
+    background: #fff;
+    margin: 0 auto;
+    border: 4px solid #0600ff;
+    border-top-color: transparent;
+    position: relative;
+    top: -9px;
+    z-index: 0;
+    /* Changed from -1 to 0 or 1 to sit right */
+}
+
+.mobile-loader .mobile-mouth .line-3:before,
+.mobile-loader .mobile-mouth .line-3:after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #0600ff;
+    display: inline-block;
+    border-radius: 50%;
+    top: -6px;
+}
+
+.mobile-loader .mobile-mouth .line-3:before {
+    left: -4px;
+}
+
+.mobile-loader .mobile-mouth .line-3:after {
+    right: -4px;
+}
+
+/* Hands 'last' variant */
+.mobile-loader .mobile-hand {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+}
+
+.mobile-loader .mobile-hand .left {
+    position: absolute;
+    left: 0;
+    top: -5px;
+}
+
+.mobile-loader .mobile-hand .left .hand {
+    position: absolute;
+    width: 5px;
+    background: #0600ff;
+    display: inline-block;
+
+    height: 33px;
+    bottom: 36px;
+    right: 12px;
+    transform: rotate(-50deg);
+    animation: last-hand-move-left 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+.mobile-loader .mobile-hand .left .hand:before {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #0600ff;
+    display: inline-block;
+    border-radius: 50%;
+    top: -2px;
+    left: -1px;
+}
+
+.mobile-loader .mobile-hand .left .hand:after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    background: #0600ff;
+    display: inline-block;
+
+    height: 25px;
+    bottom: 10px;
+    right: 7px;
+    transform: rotate(35deg);
+    animation: last-hand-move-after 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes last-hand-move-left {
+    0% {
+        transform: translateY(-50deg);
+        right: 12px;
+    }
+
+    100% {
+        transform: rotate(-70deg);
+        right: 14px;
+    }
+}
+
+@keyframes last-hand-move-after {
+    0% {
+        height: 25px;
+        bottom: 10px;
+        right: 7px;
+        transform: rotate(35deg);
+    }
+
+    100% {
+        height: 45px;
+        bottom: -5px;
+        right: 19px;
+        transform: rotate(50deg);
+    }
+}
+
+.mobile-loader .mobile-hand .right {
+    position: absolute;
+    right: 0;
+    top: -5px;
+}
+
+.mobile-loader .mobile-hand .right .hand {
+    position: absolute;
+    width: 5px;
+    background: #0600ff;
+    display: inline-block;
+
+    top: -67px;
+    left: auto;
+    right: -20px;
+    height: 33px;
+    transform: rotate(50deg);
+    animation: last-hand-move-right 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+.mobile-loader .mobile-hand .right .hand:before {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #0600ff;
+    display: inline-block;
+    border-radius: 50%;
+    top: -2px;
+    left: -1px;
+}
+
+.mobile-loader .mobile-hand .right .hand:after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    background: #0600ff;
+    display: inline-block;
+
+    height: 25px;
+    bottom: 9px;
+    right: -7px;
+    transform: rotate(-35deg);
+    animation: last-hand-move-right-after 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes last-hand-move-right {
+    0% {
+        right: -19px;
+        transform: rotate(50deg);
+    }
+
+    100% {
+        transform: rotate(60deg);
+    }
+}
+
+@keyframes last-hand-move-right-after {
+    0% {
+        height: 25px;
+        bottom: 9px;
+        right: -7px;
+        transform: rotate(-35deg);
+    }
+
+    100% {
+        height: 48px;
+        bottom: -10px;
+        right: -17px;
+        transform: rotate(-44deg);
+    }
+}
+
+.mobile-loader .mobile-hand .right .finger-wrap .finger {
+    margin-left: 17px;
+}
+
+.mobile-loader .mobile-hand .right .finger-wrap .finger-thumb {
+    position: relative;
+    left: 15px;
+    top: 10px;
+}
+
+/* Dumbbells */
+.mobile-loader .dumbell-wrap {
+    animation: slide-bottom 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+.mobile-loader .dumbell-wrap .dumbell-left {
+    width: 23px;
+    height: 40px;
+    display: inline-block;
+    border: 5px solid #0600ff;
+    background: #02e5fe;
+    border-radius: 10px 0 0 10px;
+    position: absolute;
+    top: -63px;
+    left: -55px;
+}
+
+.mobile-loader .dumbell-wrap .dumbell-left:before {
+    content: "";
+    height: 50px;
+    width: 5px;
+    background: #0600ff;
+    border-radius: 10px;
+    display: inline-block;
+    position: absolute;
+    top: -9px;
+    left: 4px;
+}
+
+.mobile-loader .dumbell-wrap .dumbell-right {
+    width: 23px;
+    height: 40px;
+    display: inline-block;
+    border: 5px solid #0600ff;
+    background: #02e5fe;
+    border-radius: 0 10px 10px 0;
+    position: absolute;
+    top: -63px;
+    right: -55px;
+}
+
+.mobile-loader .dumbell-wrap .dumbell-right:before {
+    content: "";
+    height: 50px;
+    width: 5px;
+    background: #0600ff;
+    border-radius: 10px;
+    display: inline-block;
+    position: absolute;
+    top: -9px;
+    right: 4px;
+}
+
+.mobile-loader .dumbell-wrap .dumbell-bar {
+    width: 250px;
+    /* Made wide enough */
+    height: 5px;
+    background: #0600ff;
+    position: absolute;
+    top: -42px;
+    /* Positioned relative to hands? */
+    left: -50%;
+    right: 0;
+    border-radius: 30px;
+    z-index: -1;
+}
+
+/* Finger wrap animations */
+.mobile-loader .finger-wrap {
+    position: absolute;
+    left: 0;
+    text-align: center;
+    right: 0;
+    top: -42px;
+    /* Initial top */
+    animation: last-hand-move-finger-wrap 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes last-hand-move-finger-wrap {
+    0% {
+        top: -42px;
+    }
+
+    100% {
+        top: -17px;
+    }
+}
+
+.mobile-loader .finger-wrap .finger {
+    width: 13px;
+    height: 10px;
+    border-radius: 30px;
+    background: #0600ff;
+    display: inline-block;
+    float: left;
+}
+
+.mobile-loader .finger-wrap .finger-thumb {
+    width: 4px;
+    height: 10px;
+    border-radius: 30px;
+    background: #0600ff;
+    margin: -10px 0px 0 -15px;
+    display: inline-block;
+    float: left;
+}
+
+.mobile-loader .mobile-hand .left .finger-wrap .finger {
+    margin: 0 0 0 -25px;
+}
+
+.mobile-loader .mobile-hand .left .finger-wrap .finger-thumb {
+    margin: 0;
+    position: relative;
+    left: -14px;
+}
+
+
+/* Legs */
+.mobile-bottom {
+    position: relative;
+    text-align: center;
+    margin-top: -10px;
+    /* Pull legs up to body if needed */
+}
+
+.mobile-leg {
+    height: 33px;
+    width: 5px;
+    background: #0600ff;
+    margin: 0 auto;
+    display: inline-block;
+    position: relative;
+}
+
+.mobile-leg:after {
+    content: "";
+    width: 20px;
+    height: 4px;
+    background: #0600ff;
+    display: inline-block;
+    border-radius: 10px;
+    position: absolute;
+    bottom: -1px;
+}
+
+.mobile-leg.left {
+    transform: rotate(4deg);
+    animation: leg-left 0.5s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes leg-left {
+    0% {
+        transform: rotate(4deg);
+        top: -1px;
+    }
+
+    100% {
+        transform: rotate(6deg);
+        top: -1px;
+    }
+}
+
+.mobile-leg.left:after {
+    transform: rotate(-4deg);
+    left: -15px;
+}
+
+.mobile-leg.right {
+    transform: rotate(-4deg);
+    margin-left: 34px;
+    animation: leg-right 0.5s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes leg-right {
+    0% {
+        transform: rotate(-4deg);
+        top: -1px;
+    }
+
+    100% {
+        transform: rotate(-6deg);
+        top: -1px;
+    }
+}
+
+.mobile-leg.right:after {
+    transform: rotate(4deg);
+    right: -15px;
+}
+
+.bottom-border {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    width: 210px;
+    margin: 0 auto;
+    height: 5px;
+    border-radius: 10px;
+    background: #0600ff;
+}
+
+
+/* Eyes shared styles */
+.mobile-eyes span {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #0600ff;
+    position: relative;
+}
+
+.mobile-eyes span:before {
+    content: "";
+    width: 30px;
+    height: 5px;
+    background: #0600ff;
+    border-radius: 10px;
+    display: inline-block;
+    position: absolute;
+    top: -3px;
+    z-index: 1;
+}
+
+.mobile-eyes span:after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    top: -2px;
+}
+
+.mobile-eyes>div {
+    display: inline-block;
+}
+
+.mobile-eyes .left {
+    margin-right: 15px;
+}
+
+.mobile-eyes .left span:before {
+    transform: rotate(25deg);
+    left: -10px;
+    animation: eye-left 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes eye-left {
+    0% {
+        transform: rotate(25deg);
+    }
+
+    100% {
+        transform: rotate(14deg);
+    }
+}
+
+.mobile-eyes .left span:after {
+    left: 0;
+}
+
+.mobile-eyes .right span:before {
+    transform: rotate(-25deg);
+    right: -10px;
+    animation: eye-right 1s cubic-bezier(1, 0, 0, 1) infinite alternate forwards;
+}
+
+@keyframes eye-right {
+    0% {
+        transform: rotate(-25deg);
+    }
+
+    100% {
+        transform: rotate(-14deg);
+    }
+}
+
+.mobile-eyes .right span:after {
+    right: 0;
+}
+
+/* Vibrate */
+@keyframes vibrate-1 {
+    0% {
+        transform: translate(0);
+    }
+
+    20% {
+        transform: translate(-1px, 1px);
+    }
+
+    40% {
+        transform: translate(-1px, -1px);
+    }
+
+    60% {
+        transform: translate(1px, 1px);
+    }
+
+    80% {
+        transform: translate(1px, -1px);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+@keyframes slide-bottom {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(25px);
+    }
+}

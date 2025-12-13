@@ -13,7 +13,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // Add missing variable declarations
+  /* --- Statistics Data --- */
   const overallProgress = {
     current: "85%",
     previous: "78%",
@@ -37,6 +37,7 @@ const Dashboard = () => {
     previous: "75.8",
     trend: "up"
   };
+
 
   // Mock data
   const recentSessions = [
@@ -114,6 +115,14 @@ const Dashboard = () => {
       route: "/ai-coach",
       stats: { value: "24/7", label: "Available" },
       gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      title: "Training Calendar",
+      description: "Manage your daily workouts, track consistency, and build your schedule",
+      icon: "Calendar",
+      route: "/workout-schedule",
+      stats: { value: "Daily", label: "Plan" },
+      gradient: "from-indigo-500 to-violet-500"
     },
     {
       title: "Session History",
@@ -275,7 +284,7 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
-      
+
       {/* Floating Action Button */}
       <FloatingActionButton />
     </div>

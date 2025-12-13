@@ -35,6 +35,17 @@ const buttonVariants = cva(
     }
 );
 
+/**
+ * Enhanced Button component with variant and size support.
+ * @component
+ * @param {Object} props
+ * @param {string} [props.variant="default"] - 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'success' | 'warning' | 'danger'
+ * @param {string} [props.size="default"] - 'default' | 'sm' | 'lg' | 'icon' | 'xs' | 'xl'
+ * @param {boolean} [props.loading=false] - Shows a loading spinner
+ * @param {string} [props.iconName] - Name of the lucide icon to display
+ * @param {string} [props.iconPosition="left"] - 'left' | 'right'
+ * @param {boolean} [props.fullWidth=false] - Whether button takes full width
+ */
 const Button = React.forwardRef(({
     className,
     variant,

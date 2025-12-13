@@ -4,6 +4,12 @@ import Icon from '../AppIcon';
 import Button from './Button';
 import AppImage from '../AppImage';
 
+/**
+ * Header Component
+ * Main navigation bar for the application.
+ * Manages user menu state, navigation items, and session status indicators.
+ * Responsive design adapts to mobile and desktop views.
+ */
 const Header = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [sessionStatus, setSessionStatus] = useState('idle'); // idle, processing, completed
@@ -15,6 +21,7 @@ const Header = () => {
     { label: 'Dashboard', path: '/dashboard', icon: 'LayoutDashboard' },
     { label: 'Record', path: '/video-capture', icon: 'Video' },
     { label: 'Upload', path: '/video-upload', icon: 'Upload' },
+    { label: 'Calendar', path: '/workout-schedule', icon: 'Calendar' },
     { label: 'Results', path: '/analysis-results', icon: 'BarChart3' },
     { label: 'History', path: '/session-history', icon: 'History' }
   ];
@@ -70,7 +77,7 @@ const Header = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             {/* Option 2: Use a different SVG icon - uncomment to use */}
             {/* <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <svg
@@ -90,12 +97,12 @@ const Header = () => {
                 />
               </svg>
             </div> */}
-            
+
             {/* Option 3: Use Lucide Icon - uncomment to use */}
             {/* <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Icon name="Zap" size={20} className="text-primary-foreground" />
             </div> */}
-            
+
             <div className="flex flex-col">
               <span className="text-lg font-semibold text-foreground">BioSync</span>
               <span className="text-xs text-muted-foreground hidden sm:block">Train. Track. Transform.</span>
@@ -111,11 +118,10 @@ const Header = () => {
               <button
                 key={item?.path}
                 onClick={() => handleNavigation(item?.path)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-biomech ${
-                  isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-                }`}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-biomech ${isActive
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
               >
                 <Icon name={item?.icon} size={16} />
                 <span>{item?.label}</span>
@@ -131,9 +137,8 @@ const Header = () => {
             <Icon
               name={getSessionStatusIcon()}
               size={14}
-              className={`${getSessionStatusColor()} ${
-                sessionStatus === 'processing' ? 'animate-spin' : ''
-              }`}
+              className={`${getSessionStatusColor()} ${sessionStatus === 'processing' ? 'animate-spin' : ''
+                }`}
             />
             <span className="text-xs font-medium text-muted-foreground">
               {sessionStatus === 'processing' && 'Analyzing...'}
@@ -158,9 +163,8 @@ const Header = () => {
               <Icon
                 name="ChevronDown"
                 size={16}
-                className={`text-muted-foreground transition-transform ${
-                  userMenuOpen ? 'rotate-180' : ''
-                }`}
+                className={`text-muted-foreground transition-transform ${userMenuOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
 
@@ -183,14 +187,14 @@ const Header = () => {
                     <Icon name="User" size={16} />
                     <span>Profile Settings</span>
                   </button>
-                  <button 
+                  <button
                     className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-popover-foreground hover:bg-muted rounded-md transition-biomech"
                     onClick={() => navigate('/biometrics')}
                   >
                     <Icon name="Activity" size={16} />
                     <span>Biometric Data</span>
                   </button>
-                  <button 
+                  <button
                     className="w-full flex items-center space-x-3 px-3 py-2 text-sm text-popover-foreground hover:bg-muted rounded-md transition-biomech"
                     onClick={() => navigate('/preferences')}
                   >
@@ -216,7 +220,7 @@ const Header = () => {
             variant="ghost"
             size="icon"
             className="md:hidden"
-            onClick={() => {}}
+            onClick={() => { }}
           >
             <Icon name="Menu" size={20} />
           </Button>
@@ -231,10 +235,9 @@ const Header = () => {
               <button
                 key={item?.path}
                 onClick={() => handleNavigation(item?.path)}
-                className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-biomech ${
-                  isActive
-                    ? 'text-primary' :'text-muted-foreground'
-                }`}
+                className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-biomech ${isActive
+                  ? 'text-primary' : 'text-muted-foreground'
+                  }`}
               >
                 <Icon name={item?.icon} size={20} />
                 <span className="text-xs font-medium">{item?.label}</span>

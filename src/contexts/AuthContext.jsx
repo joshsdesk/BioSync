@@ -3,6 +3,11 @@ import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext({})
 
+/**
+ * Hook to access the authentication context.
+ * @returns {Object} User session, profile, and auth methods
+ * @throws {Error} If used outside of AuthProvider
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {
@@ -11,6 +16,11 @@ export const useAuth = () => {
   return context
 }
 
+/**
+ * AuthProvider Component
+ * Manages user authentication state, session persistence, and profile data.
+ * Supports a "Mock Mode" for development without a Supabase backend.
+ */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
@@ -64,7 +74,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  // Protected auth handlers - MUST remain synchronous
+  /* --- Protected Handlers (Sync) --- */
   const authStateHandlers = {
     // CRITICAL: This MUST remain synchronous
     onChange: (event, session) => {
@@ -102,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     return () => subscription?.unsubscribe()
   }, [])
 
-  // Auth methods
+  /* --- Public Auth Methods --- */
   const signUp = async (email, password, metadata = {}) => {
     if (isMockMode) {
       return { data: { user: MOCK_USER }, error: null }

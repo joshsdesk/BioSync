@@ -1,0 +1,196 @@
+/* BrainLoader.css */
+
+/* Scoped via a container class to avoid ID collisions if possible, but the IDs are in the SVG */
+.brain-loader-container #Band {
+  animation: band 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes band {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(200%);
+  }
+}
+
+.brain-loader-container #Happy,
+.brain-loader-container #Sad {
+  animation: face 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.brain-loader-container #Sad {
+  opacity: 0;
+  animation-name: fadeSad;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(1, 0, 0, 1);
+  animation-direction: alternate;
+}
+
+.brain-loader-container #Happy {
+  animation-name: fadeHappy;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(1, 0, 0, 1);
+  animation-direction: alternate;
+}
+
+@keyframes fadeHappy {
+  from {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+}
+
+@keyframes fadeSad {
+  from {
+    opacity: 0;
+    transform: translateY(0%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(10%);
+  }
+}
+
+@keyframes face {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(10%);
+  }
+}
+
+.brain-loader-container #Body {
+  animation: body 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes body {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(5%);
+  }
+}
+
+.brain-loader-container #Barbell {
+  width: 700px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  animation: barbell 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes barbell {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(40%);
+  }
+}
+
+.brain-loader-container #HandLeft {
+  animation: handLeft 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.brain-loader-container #HandRight {
+  animation: handRight 1s ease-in-out infinite alternate;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes handLeft {
+  from {
+    transform: translateY(0%) translateX(0%);
+  }
+  to {
+    transform: translateY(270%) translateX(-60%);
+  }
+}
+
+@keyframes handRight {
+  from {
+    transform: translateY(0%) translateX(0%);
+  }
+  to {
+    transform: translateY(270%) translateX(60%);
+  }
+}
+
+.brain-loader-container #ForeArmRight {
+  animation: foreArmRight 1s ease-in-out infinite alternate;
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+.brain-loader-container #ForeArmLeft {
+  animation: foreArmLeft 1s ease-in-out infinite alternate;
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+@keyframes foreArmRight {
+  from {
+    transform: rotate(0deg) translateY(0%) translateX(0%) scaleY(1);
+  }
+  to {
+    transform: rotate(-5deg) translateY(25%) translateX(70%) scaleY(0.65);
+  }
+}
+
+@keyframes foreArmLeft {
+  from {
+    transform: rotate(0deg) translateY(0%) translateX(0%) scaleY(1);
+  }
+  to {
+    transform: rotate(5deg) translateY(25%) translateX(-70%) scaleY(0.65);
+  }
+}
+
+.brain-loader-container #ArmLeft {
+  animation: armLeft 1s ease-in-out infinite alternate;
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+@keyframes armLeft {
+  from {
+    transform: rotate(0deg) translateY(0%);
+  }
+  to {
+    transform: rotate(-26deg) translateY(10%);
+  }
+}
+
+.brain-loader-container #ArmRight {
+  animation: armRight 1s ease-in-out infinite alternate;
+  transform-origin: bottom;
+  transform-box: fill-box;
+}
+
+@keyframes armRight {
+  from {
+    transform: rotate(0deg) translateY(0%);
+  }
+  to {
+    transform: rotate(26deg) translateY(10%);
+  }
+}
