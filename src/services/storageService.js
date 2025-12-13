@@ -1,7 +1,17 @@
 import { supabase } from '../lib/supabase';
 
+/**
+ * Storage Service
+ * Handles all file upload, retrieval, and management operations with Supabase Storage.
+ */
 export const storageService = {
-  // Upload training video
+  /**
+   * Uploads a training video to the user's private folder.
+   * @param {File} file - The video file to upload
+   * @param {string} userId - UUID of the user
+   * @param {string} sessionId - UUID of the analysis session
+   * @returns {Promise<{data: Object, error: Object}>} Result object containing path info or error
+   */
   async uploadVideo(file, userId, sessionId) {
     try {
       const fileExt = file?.name?.split('.')?.pop()
@@ -9,9 +19,9 @@ export const storageService = {
       const filePath = `${userId}/videos/${fileName}`
 
       const { data, error } = await supabase?.storage?.from('training-videos')?.upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        })
+        cacheControl: '3600',
+        upsert: false
+      })
 
       if (error) throw error
 
@@ -21,7 +31,13 @@ export const storageService = {
     }
   },
 
-  // Upload video thumbnail
+  /**
+   * Uploads a video thumbnail image.
+   * @param {File} file - The image file
+   * @param {string} userId - UUID of the user
+   * @param {string} sessionId - UUID of the analysis session
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async uploadThumbnail(file, userId, sessionId) {
     try {
       const fileExt = file?.name?.split('.')?.pop() || 'jpg'
@@ -29,9 +45,9 @@ export const storageService = {
       const filePath = `${userId}/thumbnails/${fileName}`
 
       const { data, error } = await supabase?.storage?.from('video-thumbnails')?.upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        })
+        cacheControl: '3600',
+        upsert: true
+      })
 
       if (error) throw error
 
@@ -41,7 +57,12 @@ export const storageService = {
     }
   },
 
-  // Upload profile image
+  /**
+   * Uploads a user profile image.
+   * @param {File} file - The image file
+   * @param {string} userId - UUID of the user
+   * @returns {Promise<{data: Object, error: Object}>} Result including public URL
+   */
   async uploadProfileImage(file, userId) {
     try {
       const fileExt = file?.name?.split('.')?.pop()
@@ -49,29 +70,34 @@ export const storageService = {
       const filePath = `profiles/${fileName}`
 
       const { data, error } = await supabase?.storage?.from('profile-images')?.upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        })
+        cacheControl: '3600',
+        upsert: true
+      })
 
       if (error) throw error
 
       // Get public URL for profile images (public bucket)
       const { data: publicUrlData } = supabase?.storage?.from('profile-images')?.getPublicUrl(filePath)
 
-      return { 
-        data: { 
-          path: filePath, 
+      return {
+        data: {
+          path: filePath,
           fullPath: data?.path,
-          publicUrl: publicUrlData?.publicUrl 
-        }, 
-        error: null 
+          publicUrl: publicUrlData?.publicUrl
+        },
+        error: null
       }
     } catch (error) {
       return { data: null, error }
     }
   },
 
-  // Get signed URL for private video
+  /**
+   * Generates a signed URL for private video access.
+   * @param {string} filePath - Path to the file in storage
+   * @param {number} expiresIn - Expiration time in seconds (default: 3600)
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async getVideoSignedUrl(filePath, expiresIn = 3600) {
     try {
       const { data, error } = await supabase?.storage?.from('training-videos')?.createSignedUrl(filePath, expiresIn)
@@ -83,7 +109,12 @@ export const storageService = {
     }
   },
 
-  // Get signed URL for private thumbnail
+  /**
+   * Generates a signed URL for thumbnail access.
+   * @param {string} filePath - Path to the file in storage
+   * @param {number} expiresIn - Expiration time in seconds (default: 7200)
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async getThumbnailSignedUrl(filePath, expiresIn = 7200) {
     try {
       const { data, error } = await supabase?.storage?.from('video-thumbnails')?.createSignedUrl(filePath, expiresIn)
@@ -95,14 +126,19 @@ export const storageService = {
     }
   },
 
-  // List user's videos
+  /**
+   * Lists all videos for a specific user.
+   * @param {string} userId - UUID of the user
+   * @param {Object} options - Pagination and sorting options
+   * @returns {Promise<{data: Array, error: Object}>} List of files with signed URLs
+   */
   async getUserVideos(userId, options = {}) {
     try {
       const { data: files, error: listError } = await supabase?.storage?.from('training-videos')?.list(`${userId}/videos`, {
-          limit: options?.limit || 100,
-          offset: options?.offset || 0,
-          sortBy: { column: 'created_at', order: 'desc' }
-        })
+        limit: options?.limit || 100,
+        offset: options?.offset || 0,
+        sortBy: { column: 'created_at', order: 'desc' }
+      })
 
       if (listError) throw listError
 
@@ -121,16 +157,20 @@ export const storageService = {
         })
       )
 
-      return { 
-        data: filesWithUrls?.filter(file => file?.signedUrl), 
-        error: null 
+      return {
+        data: filesWithUrls?.filter(file => file?.signedUrl),
+        error: null
       }
     } catch (error) {
       return { data: null, error }
     }
   },
 
-  // Delete video file
+  /**
+   * Deletes a video file.
+   * @param {string} filePath - Path to the file
+   * @returns {Promise<{error: Object}>}
+   */
   async deleteVideo(filePath) {
     try {
       const { error } = await supabase?.storage?.from('training-videos')?.remove([filePath])
@@ -142,7 +182,11 @@ export const storageService = {
     }
   },
 
-  // Delete thumbnail file
+  /**
+   * Deletes a thumbnail file.
+   * @param {string} filePath - Path to the file
+   * @returns {Promise<{error: Object}>}
+   */
   async deleteThumbnail(filePath) {
     try {
       const { error } = await supabase?.storage?.from('video-thumbnails')?.remove([filePath])
@@ -154,7 +198,11 @@ export const storageService = {
     }
   },
 
-  // Delete profile image
+  /**
+   * Deletes a profile image.
+   * @param {string} filePath - Path to the file
+   * @returns {Promise<{error: Object}>}
+   */
   async deleteProfileImage(filePath) {
     try {
       const { error } = await supabase?.storage?.from('profile-images')?.remove([filePath])
@@ -166,7 +214,11 @@ export const storageService = {
     }
   },
 
-  // Generate thumbnail from video (client-side)
+  /**
+   * Client-side helper to generate an image thumbnail from a video file.
+   * @param {File} videoFile - The video file source
+   * @returns {Promise<File>} The generated thumbnail image file
+   */
   async generateVideoThumbnail(videoFile) {
     return new Promise((resolve, reject) => {
       const video = document.createElement('video')

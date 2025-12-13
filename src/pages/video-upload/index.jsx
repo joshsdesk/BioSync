@@ -108,14 +108,14 @@ const VideoUpload = () => {
       const file = selectedFiles?.[0];
       const sessionId = uuidv4();
 
-      // Step ½: Compress Video
+      /* --- Step 0: Compression --- */
       setProcessingStage('compression');
       const compressedFile = await compressionService.compressVideo(file, (progress) => {
         setProcessingProgress(progress);
         setEstimatedTime(Math.round((100 - progress) * 0.5));
       });
 
-      // Step 1: Upload video to Supabase Storage
+      /* --- Step 1: Video Upload --- */
       setProcessingStage('upload');
       const { data: videoUploadData, error: videoUploadError } = await storageService?.uploadVideo(
         compressedFile,
@@ -127,7 +127,7 @@ const VideoUpload = () => {
 
       setActualUploadProgress(30);
 
-      // Step 2: Generate and upload thumbnail
+      /* --- Step 2: Thumbnail Generation --- */
       setProcessingStage('validation');
       let thumbnailUrl = null;
       try {
@@ -147,11 +147,11 @@ const VideoUpload = () => {
 
       setActualUploadProgress(50);
 
-      // Step 3: Get video duration and sport ID
+      /* --- Step 3: Session Creation --- */
       const videoDuration = await getVideoDuration(file);
       const { data: sportData } = await supabase?.from('sports')?.select('id')?.eq('name', selectedSport)?.single();
 
-      // Step 4: Create analysis session in database
+      // Create initial DB record
       const { data: createdSession, error: sessionError } = await analysisService?.createSession({
         sportId: sportData?.id || null,
         title: sessionData?.title,
@@ -170,10 +170,10 @@ const VideoUpload = () => {
       setActualUploadProgress(70);
       setIsUploading(false);
 
-      // Step 5: Update session status to processing
+      // Update status to processing
       await analysisService?.updateSessionStatus(createdSession?.id, 'processing');
 
-      // Step 6: Call Gemini AI for video analysis
+      /* --- Step 4: AI Analysis Pipeline --- */
       setProcessingStage('analysis');
       setProcessingProgress(10);
       setEstimatedTime(120);
@@ -207,7 +207,7 @@ const VideoUpload = () => {
         setProcessingProgress(90);
         setEstimatedTime(10);
 
-        // Step 7: Extract scores from AI analysis
+        /* --- Step 5: Scoring Extraction --- */
         const scores = aiResults?.Scoring || aiResults?.scoring || {};
         const overallScore = scores?.['Overall technique'] || scores?.overall || 75;
         const postureScore = scores?.posture || scores?.Posture || 75;
@@ -215,7 +215,7 @@ const VideoUpload = () => {
         const coordinationScore = scores?.coordination || scores?.Coordination || 75;
         const techniqueScore = scores?.technique || scores?.['Sport-specific effectiveness'] || 75;
 
-        // Step 8: Store AI analysis in database
+        /* --- Step 6: Result Persistence --- */
         await supabase?.from('analysis_sessions')?.update({
           status: 'completed',
           ai_analysis: aiResults,
@@ -261,7 +261,7 @@ const VideoUpload = () => {
     }
   };
 
-  // Helper function to get video duration
+  /* --- Helpers --- */
   const getVideoDuration = (file) => {
     return new Promise((resolve) => {
       const video = document.createElement('video');

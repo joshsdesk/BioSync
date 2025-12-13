@@ -20,7 +20,7 @@ const VideoCapture = () => {
   const [currentScore, setCurrentScore] = useState(82);
   const [canRecord, setCanRecord] = useState(true);
   const [voiceCoachingActive, setVoiceCoachingActive] = useState(false);
-  
+
   const [sessionSettings, setSessionSettings] = useState({
     duration: '60',
     quality: '1080p',
@@ -33,6 +33,7 @@ const VideoCapture = () => {
     exportAnalysis: false
   });
 
+  /* --- Effects --- */
   // Timer effect
   useEffect(() => {
     let interval;
@@ -100,14 +101,15 @@ const VideoCapture = () => {
     };
   }, [isRecording, isPaused, sessionSettings?.audioFeedback, selectedSport, sessionSettings?.coachingIntensity, sessionSettings?.focusAreas]);
 
+  /* --- Handlers --- */
   const handleStartRecording = () => {
     if (!canRecord) return;
-    
+
     setIsRecording(true);
     setIsPaused(false);
     setRecordingTime(0);
     setCurrentScore(82);
-    
+
     // Simulate camera initialization
     setTimeout(() => {
       console.log('Recording started with settings:', sessionSettings);
@@ -117,19 +119,19 @@ const VideoCapture = () => {
   const handleStopRecording = () => {
     setIsRecording(false);
     setIsPaused(false);
-    
+
     // Auto-save if enabled
     if (sessionSettings?.autoSave) {
       handleSaveSession();
     }
-    
+
     // Navigate to results if export is enabled
     if (sessionSettings?.exportAnalysis) {
       setTimeout(() => {
         navigate('/analysis-results');
       }, 1000);
     }
-    
+
     // Stop voice coaching
     ttsCoachingService?.stop();
     setVoiceCoachingActive(false);
@@ -137,7 +139,7 @@ const VideoCapture = () => {
 
   const handlePauseRecording = () => {
     setIsPaused(!isPaused);
-    
+
     // Handle voice coaching pause/resume
     if (!isPaused) {
       ttsCoachingService?.pause();
@@ -156,12 +158,12 @@ const VideoCapture = () => {
       timestamp: new Date(),
       name: sessionSettings?.sessionName || `${selectedSport} Session`
     };
-    
+
     // Mock save to localStorage
     const existingSessions = JSON.parse(localStorage.getItem('biomech_sessions') || '[]');
     existingSessions?.push(sessionData);
     localStorage.setItem('biomech_sessions', JSON.stringify(existingSessions));
-    
+
     console.log('Session saved:', sessionData);
   };
 
@@ -196,7 +198,7 @@ const VideoCapture = () => {
                   Record your movement with real-time AI analysis and coaching feedback
                 </p>
               </div>
-              
+
               <div className="flex items-center space-x-3">
                 <Button
                   variant="outline"
@@ -206,7 +208,7 @@ const VideoCapture = () => {
                   <Icon name="Upload" size={16} className="mr-2" />
                   Upload Video
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   onClick={() => navigate('/session-history')}
@@ -299,23 +301,23 @@ const VideoCapture = () => {
                         {isPaused ? 'Recording Paused' : 'Recording Active'}
                       </span>
                     </div>
-                    
+
                     <div className="text-sm text-muted-foreground">
                       Sport: {selectedSport}
                     </div>
-                    
+
                     <div className="text-sm text-muted-foreground">
                       Score: <span className={currentScore >= 85 ? 'text-success' : currentScore >= 70 ? 'text-warning' : 'text-destructive'}>
                         {currentScore}/100
                       </span>
                     </div>
-                    
+
                     {/* Voice Coaching Status Indicator */}
                     {sessionSettings?.audioFeedback && (
                       <div className="flex items-center space-x-1 text-sm">
-                        <Icon 
-                          name={voiceCoachingActive ? "Volume2" : "VolumeX"} 
-                          size={14} 
+                        <Icon
+                          name={voiceCoachingActive ? "Volume2" : "VolumeX"}
+                          size={14}
                           className={voiceCoachingActive ? "text-success" : "text-muted-foreground"}
                         />
                         <span className={voiceCoachingActive ? "text-success" : "text-muted-foreground"}>
@@ -324,7 +326,7 @@ const VideoCapture = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     <Button
                       variant="outline"
@@ -334,7 +336,7 @@ const VideoCapture = () => {
                       <Icon name={isPaused ? "Play" : "Pause"} size={14} className="mr-1" />
                       {isPaused ? 'Resume' : 'Pause'}
                     </Button>
-                    
+
                     <Button
                       variant="destructive"
                       size="sm"

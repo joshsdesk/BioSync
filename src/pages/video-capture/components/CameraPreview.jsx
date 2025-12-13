@@ -2,13 +2,19 @@ import React, { useRef, useEffect, useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
-const CameraPreview = ({ 
-  isRecording, 
-  onStartRecording, 
-  onStopRecording, 
+/**
+ * CameraPreview Component
+ * Manages camera access, live video streaming, and permission handling.
+ * Displays a skeletal overlay (mock) and recording indicators.
+ * Can gracefully degrade to valid alternate actions if camera status is denied.
+ */
+const CameraPreview = ({
+  isRecording,
+  onStartRecording,
+  onStopRecording,
   selectedSport,
   showSkeleton,
-  recordingTime 
+  recordingTime
 }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -17,17 +23,19 @@ const CameraPreview = ({
   const [permissionState, setPermissionState] = useState('prompt'); // 'prompt', 'granted', 'denied'
   const [isLoading, setIsLoading] = useState(true);
 
+  /* --- Initialization --- */
   useEffect(() => {
     checkPermissionStatus();
   }, []);
 
+  /* --- Permission Handling --- */
   const checkPermissionStatus = async () => {
     try {
       // Check if browser supports permissions API
       if (navigator?.permissions?.query) {
         const cameraPermission = await navigator.permissions?.query({ name: 'camera' });
         setPermissionState(cameraPermission?.state);
-        
+
         if (cameraPermission?.state === 'granted') {
           initializeCamera();
         } else if (cameraPermission?.state === 'denied') {
@@ -65,18 +73,18 @@ const CameraPreview = ({
         },
         audio: true
       });
-      
+
       setStream(mediaStream);
       setPermissionState('granted');
-      
+
       if (videoRef?.current) {
         videoRef.current.srcObject = mediaStream;
       }
-      
+
       setCameraError(null);
     } catch (error) {
       console.error('Camera initialization error:', error);
-      
+
       // Handle specific error types
       if (error?.name === 'NotAllowedError') {
         setCameraError('Camera access was denied. Please click "Allow" when prompted or check your browser permissions.');
@@ -107,14 +115,14 @@ const CameraPreview = ({
         video: true,
         audio: true
       });
-      
+
       setStream(mediaStream);
       setPermissionState('granted');
-      
+
       if (videoRef?.current) {
         videoRef.current.srcObject = mediaStream;
       }
-      
+
       setCameraError(null);
     } catch (error) {
       setCameraError('Camera access failed. Please check your camera permissions and try again.');
@@ -132,7 +140,7 @@ const CameraPreview = ({
     // Provide instructions for different browsers
     const userAgent = navigator?.userAgent?.toLowerCase();
     let instructions = '';
-    
+
     if (userAgent?.includes('chrome')) {
       instructions = 'Click the camera icon in the address bar and select "Always allow".';
     } else if (userAgent?.includes('firefox')) {
@@ -142,7 +150,7 @@ const CameraPreview = ({
     } else {
       instructions = 'Check your browser settings to enable camera permissions for this website.';
     }
-    
+
     alert(`To enable camera access:\n\n${instructions}\n\nThen refresh the page and try again.`);
   };
 
@@ -152,6 +160,7 @@ const CameraPreview = ({
     return `${mins?.toString()?.padStart(2, '0')}:${secs?.toString()?.padStart(2, '0')}`;
   };
 
+  /* --- Render Helpers --- */
   const renderSkeletonOverlay = () => {
     if (!showSkeleton) return null;
 
@@ -164,28 +173,28 @@ const CameraPreview = ({
         >
           {/* Head */}
           <circle cx="200" cy="80" r="25" fill="none" stroke="#10B981" strokeWidth="2" className="animate-pulse" />
-          
+
           {/* Spine */}
           <line x1="200" y1="105" x2="200" y2="300" stroke="#10B981" strokeWidth="3" />
-          
+
           {/* Shoulders */}
           <line x1="150" y1="140" x2="250" y2="140" stroke="#10B981" strokeWidth="2" />
-          
+
           {/* Arms */}
           <line x1="150" y1="140" x2="120" y2="200" stroke="#10B981" strokeWidth="2" />
           <line x1="120" y1="200" x2="100" y2="260" stroke="#10B981" strokeWidth="2" />
           <line x1="250" y1="140" x2="280" y2="200" stroke="#10B981" strokeWidth="2" />
           <line x1="280" y1="200" x2="300" y2="260" stroke="#10B981" strokeWidth="2" />
-          
+
           {/* Hips */}
           <line x1="170" y1="300" x2="230" y2="300" stroke="#10B981" strokeWidth="2" />
-          
+
           {/* Legs */}
           <line x1="170" y1="300" x2="160" y2="400" stroke="#10B981" strokeWidth="2" />
           <line x1="160" y1="400" x2="150" y2="500" stroke="#10B981" strokeWidth="2" />
           <line x1="230" y1="300" x2="240" y2="400" stroke="#10B981" strokeWidth="2" />
           <line x1="240" y1="400" x2="250" y2="500" stroke="#10B981" strokeWidth="2" />
-          
+
           {/* Joint markers */}
           <circle cx="150" cy="140" r="4" fill="#DC2626" className="animate-pulse" />
           <circle cx="250" cy="140" r="4" fill="#DC2626" className="animate-pulse" />
@@ -205,10 +214,10 @@ const CameraPreview = ({
     return (
       <div className="relative w-full h-full bg-muted rounded-lg flex items-center justify-center">
         <div className="text-center p-8 max-w-md">
-          <Icon 
-            name={permissionState === 'denied' ? "CameraOff" : "Camera"} 
-            size={48} 
-            className="text-muted-foreground mx-auto mb-4" 
+          <Icon
+            name={permissionState === 'denied' ? "CameraOff" : "Camera"}
+            size={48}
+            className="text-muted-foreground mx-auto mb-4"
           />
           <h3 className="text-lg font-semibold text-foreground mb-2">
             {permissionState === 'denied' ? 'Camera Access Blocked' : 'Camera Permission Required'}
@@ -216,7 +225,7 @@ const CameraPreview = ({
           <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
             {cameraError}
           </p>
-          
+
           <div className="flex flex-col space-y-3">
             {(permissionState === 'prompt' || cameraError?.includes('dismissed') || cameraError?.includes('cancelled')) && (
               <Button onClick={requestPermission} className="w-full">
@@ -224,30 +233,30 @@ const CameraPreview = ({
                 Try Camera Access Again
               </Button>
             )}
-            
+
             {permissionState === 'denied' && (
               <Button onClick={openBrowserSettings} variant="outline" className="w-full">
                 <Icon name="Settings" size={16} className="mr-2" />
                 Open Browser Settings
               </Button>
             )}
-            
+
             <Button onClick={initializeCamera} variant="outline" className="w-full">
               <Icon name="RefreshCw" size={16} className="mr-2" />
               Retry Connection
             </Button>
-            
+
             {/* Alternative action for users who can't enable camera */}
-            <Button 
-              onClick={() => window.location.href = '/video-upload'} 
-              variant="secondary" 
+            <Button
+              onClick={() => window.location.href = '/video-upload'}
+              variant="secondary"
               className="w-full"
             >
               <Icon name="Upload" size={16} className="mr-2" />
               Upload Video Instead
             </Button>
           </div>
-          
+
           {/* Enhanced help text with troubleshooting steps */}
           <div className="mt-6 p-4 bg-background rounded-lg border">
             <div className="text-xs text-muted-foreground space-y-2">
@@ -303,7 +312,7 @@ const CameraPreview = ({
           </div>
         </div>
       )}
-      
+
       <video
         ref={videoRef}
         autoPlay
@@ -311,15 +320,15 @@ const CameraPreview = ({
         playsInline
         className="w-full h-full object-cover"
       />
-      
+
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none"
         style={{ display: 'none' }}
       />
-      
+
       {renderSkeletonOverlay()}
-      
+
       {/* Recording indicator */}
       {isRecording && (
         <div className="absolute top-4 left-4 flex items-center space-x-2 bg-destructive text-destructive-foreground px-3 py-1 rounded-full">
@@ -327,21 +336,21 @@ const CameraPreview = ({
           <span className="text-sm font-medium">REC</span>
         </div>
       )}
-      
+
       {/* Timer */}
       {isRecording && (
         <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-lg">
           <span className="font-mono text-lg">{formatTime(recordingTime)}</span>
         </div>
       )}
-      
+
       {/* Sport indicator */}
       {selectedSport && (
         <div className="absolute bottom-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-lg">
           <span className="text-sm font-medium">{selectedSport}</span>
         </div>
       )}
-      
+
       {/* Quality indicators */}
       <div className="absolute bottom-4 right-4 flex items-center space-x-2">
         <div className="flex items-center space-x-1 bg-black bg-opacity-50 text-white px-2 py-1 rounded">

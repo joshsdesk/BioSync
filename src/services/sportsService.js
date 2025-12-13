@@ -16,8 +16,17 @@ const MOCK_SPORTS = [
 
 const isMockMode = !supabase;
 
+
+/**
+ * Sports Service
+ * Handles fetching, managing, and creating sports categories and definitions.
+ */
 export const sportsService = {
-  // Get all sports (default + user-created from sports table)
+  /**
+   * Retrieves all available sports, including both default and user-customized ones.
+   * Forces mock data if Supabase client is unavailable.
+   * @returns {Promise<Array>} List of sport objects
+   */
   async getAllSports() {
     // Force mock mode if no supabase client
     if (isMockMode || !supabase) return MOCK_SPORTS;
@@ -33,7 +42,11 @@ export const sportsService = {
     }
   },
 
-  // Get sports by category
+  /**
+   * Filters sports by their category.
+   * @param {string} category - The category to filter by (e.g., 'Team Sports')
+   * @returns {Promise<Array>} List of sports in the category
+   */
   async getSportsByCategory(category) {
     if (isMockMode) return MOCK_SPORTS.filter(s => s.category === category);
     try {
@@ -48,7 +61,14 @@ export const sportsService = {
     }
   },
 
-  // Add a user-created sport to the sports table
+  /**
+   * Adds a new custom sport to the database.
+   * @param {Object} sportData - The sport data object
+   * @param {string} sportData.name - Name of the sport
+   * @param {string} sportData.category - Category of the sport
+   * @param {string} sportData.user_id - UUID of the creator
+   * @returns {Promise<Object>} The created sport object
+   */
   async addUserSport(sportData) {
     if (isMockMode) {
       console.log('Mock add user sport:', sportData);
@@ -80,7 +100,11 @@ export const sportsService = {
     }
   },
 
-  // Get user's custom sports from sports table
+  /**
+   * Retrieves custom sports created by a specific user (from main table).
+   * @param {string} userId - UUID of the user
+   * @returns {Promise<Array>} List of user's custom sports
+   */
   async getUserSports(userId) {
     if (isMockMode) return [];
     try {
@@ -94,7 +118,11 @@ export const sportsService = {
     }
   },
 
-  // Get user's custom sports from custom_sports table
+  /**
+   * Retrieves custom variations of sports from the separate custom_sports table.
+   * @param {string} userId - UUID of the user
+   * @returns {Promise<Array>}
+   */
   async getUserCustomSports(userId) {
     if (isMockMode) return [];
     try {
@@ -108,7 +136,11 @@ export const sportsService = {
     }
   },
 
-  // Add a sport to user's custom_sports table (for personal variations)
+  /**
+   * Adds a personalized sport variation to the custom_sports table.
+   * @param {Object} sportData - Data for the custom sport
+   * @returns {Promise<Object>} Created custom sport
+   */
   async addUserCustomSport(sportData) {
     if (isMockMode) return { ...sportData, id: Date.now() };
     try {
@@ -135,7 +167,11 @@ export const sportsService = {
     }
   },
 
-  // Search sports by name
+  /**
+   * Searches for sports by name (case-insensitive).
+   * @param {string} searchTerm - The name to search for
+   * @returns {Promise<Array>} List of matching sports
+   */
   async searchSports(searchTerm) {
     if (isMockMode) return MOCK_SPORTS.filter(s => s.name.toLowerCase().includes(searchTerm.toLowerCase()));
     try {
@@ -150,7 +186,11 @@ export const sportsService = {
     }
   },
 
-  // Get sport by ID from sports table
+  /**
+   * Retrieves a single sport by its ID.
+   * @param {string|number} sportId - ID of the sport
+   * @returns {Promise<Object>} Sport object
+   */
   async getSportById(sportId) {
     if (isMockMode) return MOCK_SPORTS.find(s => s.id === sportId);
     try {
@@ -164,7 +204,11 @@ export const sportsService = {
     }
   },
 
-  // Get custom sport by ID from custom_sports table
+  /**
+   * Retrieves a custom sport variation by ID.
+   * @param {string|number} sportId - ID of the custom sport
+   * @returns {Promise<Object>} Custom sport object
+   */
   async getCustomSportById(sportId) {
     if (isMockMode) return null;
     try {
@@ -178,7 +222,12 @@ export const sportsService = {
     }
   },
 
-  // Delete user sport from sports table (only for sport creator)
+  /**
+   * Deletes a user-created sport from the main sports table.
+   * @param {string|number} sportId - ID of the sport
+   * @param {string} userId - ID of the requesting user (must match creator)
+   * @returns {Promise<boolean>} Success status
+   */
   async deleteUserSport(sportId, userId) {
     if (isMockMode) return true;
     try {
@@ -192,7 +241,12 @@ export const sportsService = {
     }
   },
 
-  // Delete user custom sport from custom_sports table (only for sport creator)
+  /**
+   * Deletes a personalized custom sport.
+   * @param {string|number} sportId - ID of the custom sport
+   * @param {string} userId - ID of the requesting user
+   * @returns {Promise<boolean>} Success status
+   */
   async deleteUserCustomSport(sportId, userId) {
     if (isMockMode) return true;
     try {
@@ -206,7 +260,10 @@ export const sportsService = {
     }
   },
 
-  // Get all available sport categories
+  /**
+   * Retrieves a list of all unique sport categories.
+   * @returns {Promise<Array>} List of category strings
+   */
   async getSportCategories() {
     if (isMockMode) return [...new Set(MOCK_SPORTS.map(s => s.category))];
     try {

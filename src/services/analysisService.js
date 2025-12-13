@@ -1,8 +1,20 @@
 import { supabase } from '../lib/supabase';
 import { storageService } from './storageService';
 
+
+/**
+ * Analysis Service
+ * Manages video analysis sessions, database records, and results retrieval.
+ */
 export const analysisService = {
-  // Create new analysis session
+  /**
+   * Creates a new analysis session in the database.
+   * @param {Object} sessionData - Initial session data
+   * @param {string} sessionData.sportId - ID of the selected sport
+   * @param {string} sessionData.title - Title of the session
+   * @param {string} sessionData.videoUrl - Storage path of the video
+   * @returns {Promise<{data: Object, error: Object}>} The created session
+   */
   async createSession(sessionData) {
     try {
       const user = await supabase?.auth?.getUser();
@@ -11,19 +23,19 @@ export const analysisService = {
       }
 
       const { data, error } = await supabase?.from('analysis_sessions')?.insert([{
-          user_id: user?.data?.user?.id,
-          sport_id: sessionData?.sportId,
-          title: sessionData?.title,
-          description: sessionData?.description || null,
-          athlete_name: sessionData?.athleteName || null,
-          session_date: sessionData?.sessionDate || new Date()?.toISOString()?.split('T')?.[0],
-          video_url: sessionData?.videoUrl,
-          thumbnail_url: sessionData?.thumbnailUrl || null,
-          video_duration: sessionData?.videoDuration || null,
-          status: 'uploading',
-          focus_areas: sessionData?.focusAreas || [],
-          tags: sessionData?.tags || []
-        }])?.select()?.single();
+        user_id: user?.data?.user?.id,
+        sport_id: sessionData?.sportId,
+        title: sessionData?.title,
+        description: sessionData?.description || null,
+        athlete_name: sessionData?.athleteName || null,
+        session_date: sessionData?.sessionDate || new Date()?.toISOString()?.split('T')?.[0],
+        video_url: sessionData?.videoUrl,
+        thumbnail_url: sessionData?.thumbnailUrl || null,
+        video_duration: sessionData?.videoDuration || null,
+        status: 'uploading',
+        focus_areas: sessionData?.focusAreas || [],
+        tags: sessionData?.tags || []
+      }])?.select()?.single();
 
       if (error) throw error;
       return { data, error: null };
@@ -33,20 +45,25 @@ export const analysisService = {
     }
   },
 
-  // Update session with analysis results
+  /**
+   * Updates an existing session with AI analysis results and scores.
+   * @param {string} sessionId - UUID of the session
+   * @param {Object} analysisResults - object containing scores and breakdown
+   * @returns {Promise<{data: Object, error: Object}>} Updated session
+   */
   async updateSessionWithResults(sessionId, analysisResults) {
     try {
       const { data, error } = await supabase?.from('analysis_sessions')?.update({
-          status: 'completed',
-          processing_completed_at: new Date()?.toISOString(),
-          overall_score: analysisResults?.overallScore || null,
-          posture_score: analysisResults?.postureScore || null,
-          balance_score: analysisResults?.balanceScore || null,
-          coordination_score: analysisResults?.coordinationScore || null,
-          technique_score: analysisResults?.techniqueScore || null,
-          power_score: analysisResults?.powerScore || null,
-          endurance_score: analysisResults?.enduranceScore || null
-        })?.eq('id', sessionId)?.select()?.single();
+        status: 'completed',
+        processing_completed_at: new Date()?.toISOString(),
+        overall_score: analysisResults?.overallScore || null,
+        posture_score: analysisResults?.postureScore || null,
+        balance_score: analysisResults?.balanceScore || null,
+        coordination_score: analysisResults?.coordinationScore || null,
+        technique_score: analysisResults?.techniqueScore || null,
+        power_score: analysisResults?.powerScore || null,
+        endurance_score: analysisResults?.enduranceScore || null
+      })?.eq('id', sessionId)?.select()?.single();
 
       if (error) throw error;
       return { data, error: null };
@@ -56,7 +73,13 @@ export const analysisService = {
     }
   },
 
-  // Update session status
+  /**
+   * Updates the status of a session (e.g., 'processing', 'failed').
+   * @param {string} sessionId - UUID of the session
+   * @param {string} status - New status string
+   * @param {string} [errorMessage] - Optional error message if failed
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async updateSessionStatus(sessionId, status, errorMessage = null) {
     try {
       const updateData = {
@@ -75,7 +98,11 @@ export const analysisService = {
     }
   },
 
-  // Get session by ID with video URL
+  /**
+   * Retrieves a full session object, including signed URLs for media.
+   * @param {string} sessionId - UUID of the session
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async getSession(sessionId) {
     try {
       const { data: session, error } = await supabase?.from('analysis_sessions')?.select(`
@@ -96,12 +123,12 @@ export const analysisService = {
         const { data: thumbData } = await storageService?.getThumbnailSignedUrl(session?.thumbnail_url);
         session.signedThumbnailUrl = thumbData?.signedUrl;
       }
-      
+
       // Parse AI analysis if it exists
       if (session?.ai_analysis) {
         try {
-          session.parsedAiAnalysis = typeof session?.ai_analysis === 'string' 
-            ? JSON.parse(session?.ai_analysis) 
+          session.parsedAiAnalysis = typeof session?.ai_analysis === 'string'
+            ? JSON.parse(session?.ai_analysis)
             : session?.ai_analysis;
         } catch (parseError) {
           console.warn('Failed to parse AI analysis:', parseError);
@@ -116,7 +143,11 @@ export const analysisService = {
     }
   },
 
-  // Get user's sessions with pagination
+  /**
+   * Fetches a paginated list of sessions for the current user.
+   * @param {Object} options - Filter and pagination options
+   * @returns {Promise<{data: Array, count: number, error: Object}>}
+   */
   async getUserSessions(options = {}) {
     try {
       const user = await supabase?.auth?.getUser();
@@ -168,10 +199,10 @@ export const analysisService = {
         })
       );
 
-      return { 
-        data: sessionsWithUrls, 
+      return {
+        data: sessionsWithUrls,
         count,
-        error: null 
+        error: null
       };
     } catch (error) {
       console.error('Error fetching user sessions:', error);
@@ -179,7 +210,11 @@ export const analysisService = {
     }
   },
 
-  // Delete session and associated data
+  /**
+   * Permanently deletes a session and its associated storage files.
+   * @param {string} sessionId - UUID of the session
+   * @returns {Promise<{error: Object}>}
+   */
   async deleteSession(sessionId) {
     try {
       // Get session data first to delete associated files
@@ -206,7 +241,12 @@ export const analysisService = {
     }
   },
 
-  // Archive/unarchive session
+  /**
+   * Toggles the archived status of a session.
+   * @param {string} sessionId - UUID of the session
+   * @param {boolean} isArchived - New archived state
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async toggleArchiveSession(sessionId, isArchived) {
     try {
       const { data, error } = await supabase?.from('analysis_sessions')?.update({ is_archived: isArchived })?.eq('id', sessionId)?.select()?.single();
@@ -219,7 +259,10 @@ export const analysisService = {
     }
   },
 
-  // Get latest session for quick access
+  /**
+   * Retrieves the user's most recent active session.
+   * @returns {Promise<{data: Object, error: Object}>}
+   */
   async getLatestSession() {
     try {
       const user = await supabase?.auth?.getUser();
